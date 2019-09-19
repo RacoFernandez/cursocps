@@ -1,0 +1,30 @@
+---
+title: "Introducción a la Ciencia de Datos en R - CPS"
+author: "Ramiro Oliverio Fernández"
+date: "2019-09-20"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Referencias
+
+Este curso está basado en:
+[Ciencia de Datos para Gente Sociable](https://bitsandbricks.github.io/ciencia_de_datos_gente_sociable/) de Antonio Vazquez Brust 
+[Introducción a Data Science](https://github.com/DiegoKoz/intro_ds) de Diego Kozlowski y Natsumi Shokida
+Clases de Santiago Banchero y Juan Manuel Fernández en la Maestría de Data Mining de la UBA. https://dmuba.github.io/
+
+### Introducción breve a Data Science
+
+Background:
+
+- Mayor volumen de datos
+- Disponibilidad de accesos (APIs)
+- Datos abiertos
+- Múltiples y diversas aplicaciones
+
+
+
