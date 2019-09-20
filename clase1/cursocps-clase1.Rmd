@@ -6,7 +6,6 @@ output:
   html_document:
     toc: yes
     toc_float: yes
-subtitle: Referencias
 ---
 
 ```{r setup, include=FALSE}
@@ -47,7 +46,7 @@ Se nutre y está relacionado con diferentes campos/temáticas:
 
 Relacionado con Knowledge Discovery in Databases, concepto para describir el proceso de cómo extraer conocimiento basado y potenciado por los datos.
 
-Proceso interactivo e iterativo:
+Proceso __interactivo e iterativo__:
 
 ![](img/kdd-path.PNG)
 
@@ -74,13 +73,13 @@ El entorno de desarrollo integrado ("IDE", por sus siglas en inglés) más popul
 
 Así se ve el entorno:
 
-![img/rstudio.png]
+![](img/rstudio.PNG)
 
 ## Primeras operaciones en R
 
-R es un lenguaje de programación orientado a objetos, los cuales son fundamentales para el mismo. Todo lo que se guarda en R es un objeto con un nombre específico que no permite espacios. Hay diferentes tipos de objetos: números, listas, funciones, gráficos, tablas y muchos más que ya iremos viendo. Los objetos se almacenan en el ambiente (environment).
+R es un lenguaje de programación __orientado a objetos__, los cuales son fundamentales para el mismo. Todo lo que se guarda en R es un objeto con un nombre específico que no permite espacios. Hay diferentes tipos de objetos: números, listas, funciones, gráficos, tablas y muchos más que ya iremos viendo. Los objetos se almacenan en el ambiente (environment).
 
-El operador __```<-```__ se utiliza para definir objeto. Es un operador unidireccional, por lo cual  __A la izquierda__ del __```<-```__ debe ubicarse el nombre que tomará el elemento a crear. __Del lado derecho__ debe ir la definición del mismo. Al definir un objeto, su contenido queda guardado en el ambiente para poder ser usado de forma posterior.
+El operador __```<-```__ se utiliza para definir objeto. Es un operador unidireccional, por lo cual  __A la izquierda__ del __```<-```__ debe ubicarse el nombre que tomará el elemento a crear. __Del lado derecho__ debe ir la definición del mismo. Al definir un objeto, su contenido queda guardado en el ambiente para poder ser usado de forma posterior. También se puede utilizar ```=```.
 
 Para ejecutar cada línea de código, debemos ejecutarla presionando ```Ctrl``` + ```Enter```. Seleccionando varías líneas de código y utilizando el mismo comando (```Ctrl``` + ```Enter```) se irán ejecutando una por una.
 
@@ -139,7 +138,7 @@ Los valores (y vectores que los contienen) pueden ser de distintas _clases_, las
 - character: ```"bew"```, ```frase estándar```
 - numeric (real or decimal): ```3.5```
 - integer: ```3```
-- logical: booleanos (```TRUE```, ````FALSE```)
+- logical: booleanos (```TRUE```, ```FALSE```)
 
 Con la función ```class()``` podemos consultar la clase del objeto.
 __Numeric__     
@@ -182,6 +181,11 @@ Podemos realizar diferentes operaciones sobre ese vector
 ```{r}
 ejvector * 2
 ```
+Utilizando los dos puntos ```:``` indicamos a R que vaya de un valor al otro, sirve para generar un vector por ejemplo.
+
+```{r}
+ejvector2 <- c(1:5)
+```
 
 Podemos crear un vector que contenga diferentes ```strings```
 ```{r}
@@ -214,6 +218,17 @@ También podemos usar la posición en ese vector para reemplazar el valor
 ```{r}
 utiles[3] <- "sacapuntas" 
 utiles
+```
+Hay varias funciones que nos permiten generar vectores. Por ejemplo, ```rep()``` genera repeticiones con ciertos parámetros que son ```èach``` para indicar el N de repeticiones y ```length``` para indicar el largo del vector. Sin ```length````, cada valor del vector se repite la cantidad N de veces indicada 1 sola vez para cada valor. También funciona para valores numéricos.
+
+```{r}
+colores <- rep(c("verde", "rojo"), each=4, length=18)
+colores
+```
+Por otra parte, ```seq()``` es exclusivamente para generar una secuencia de valores numéricos con un cierto patrón. El argumento opcional ```"by"``` indica de cuánto son los saltos. Sin este argumento, pasa de 1 a 1.
+
+```{r}
+seq(1,10, by=3)
 ```
 ### Data Frames
 
@@ -266,6 +281,13 @@ lista
 lista$DF$CALLENOMBRE
 lista[5]
 ```
+### Matrices
+
+Las matrices son estructuras bidimensionales (como los dataframe), donde los valores son del mismo tipo (como en los vectores). Son útiles ya que, al igual que con las listas, muchas funciones o modelos de R devuelven matrices o las toman como argumento. Se generaon con ```matrix()```, con los argumentos de la data a pasarle, la cantidad de filas y columnas y el parámetro ````byrow``` que indica si la matriz se completa por las filas o por las columnas (por default es ```TRUE```, es decir se llena por filas).
+
+```{r}
+matrix (1:8, nrow=2, ncol=4, byrow = TRUE)
+```
 
 ### Uso de ciertos caracteres en R
 
@@ -288,20 +310,22 @@ Vamos a instalar algunas librerías que utilizaremos:
 #install.packages(c("tidyverse", "data.table", "openxlsx", "readxl", "xlsx", "ggthemes"),repos = "http://cran.us.r-project.org")
 ```
 
-### Lectura/escrituras de archivos
+### Lectura/escrituras de archivos -- CSV/TXT
 Vamos a empezar viendo cómo levantar archivos en los formatos de datos tabulares más clásicos: csv, txt y excel.
 
 Hay muchas funciones para levantar csv o txt, sobre todo cambian: el delimitador, el encabezado y el separador decimal.
 
-Vamos a utilizar la función ```read.csv``` (pero podría ser ```read.table```, ```fread```, ```read.delim```, en general cambian sus parámetros default, hay algunas más óptimas que otras). Le estamos pasando como parámetro de ubicación una URL (generada por el portal de datos de CABA), pero puede ser la ubicación de un archivo en la pc local (línea de código comentada) 
+Vamos a utilizar la función ```read.csv``` (pero podría ser ```read.table```, ```fread```, ```read.delim```, en general cambian sus parámetros default, hay algunas más óptimas que otras, aunque por ejemplo ```fread()``` no es de R Base). Le estamos pasando como parámetro de ubicación una URL (generada por el portal de datos de CABA), pero puede ser la ubicación de un archivo en la pc local (línea de código comentada) 
 ```{r}
 radares <- read.csv("http://cdn.buenosaires.gob.ar/datosabiertos/datasets/flujo-vehicular-por-radares-ausa/flujo-vehicular-por-radares-2019.csv", header=TRUE, sep=',', dec='.')
 head(radares)
 #radares <- read.csv("C:/Users/rama_/Desktop/Ramiro/Transito radares ausa/flujo-vehicular-por-radares-2019.csv", header=TRUE, sep=',', dec='.')
 # si esta en mi directorio de trabajo, directamente:
 #radares <- read.csv("flujo-vehicular-por-radares-2019.csv", header=TRUE, sep=',', dec='.')
+#probamos levantar un archivo .txt
+indicadoresmoc <- read.csv("http://cdn.buenosaires.gob.ar/datosabiertos/datasets/mapa-de-oportunidades-comerciales-moc/COMERCIOS.TXT", sep='\t')
 ```
-Una vez que tenemos cargado un dataframe, podemos aplicar varias funciones para explorarlo.
+Una vez que tenemos cargado un dataframe (````radares``` en este caso), podemos aplicar varias funciones para explorarlo.
 
 Podemos "imprimir" (deriva de la función ```print```) sus primeros o sus últimos registros
 ```{r}
@@ -364,6 +388,33 @@ Para remover todos los objeto del ambiente, usamos
 ```{r}
 rm(list=ls())
 ```
+
+### Otras funciones
+Vamos a ver dos funciones básicas que seguramente utilicemos. ```paste()``` para concatener serie de caracteres (u objetos que los almacenen) y ```print()``` que imprime lo que le indiquemos.
+```{r}
+paste("Armamos", "una", "frase", sep= " ")
+frasearmada <- paste("Armamos", "una", "frase", sep= " ")
+print (frasearmada)
+```
+
+### Lectura/escrituras de archivos -- Excel
+Para leer y escribir archivos en excel, también hay varias funciones. A diferencia de csv y txt (son formatos libres y abiertos) pueden ser tanto la librería ```openxlsx```, ```readxl``` o ```xlsx```. Ahora levantaremos un archivo con formato ```.xlsx```, que es el formato abierto basado en XML (similar a HTML) que se usa en muchos archivos excel. También los archivos excel pueden estar en ```.xls```, que es formato propietario de MS Office (Excel).
+```{r}
+#install.packages("openxlsx")
+library("openxlsx")
+importaciones_bienes_cap_prod <- read.xlsx("http://estadisticas.produccion.gob.ar/app/documentos/bsk-prod-clasificacion.xlsx")
+#para grabar, paso los parametros de: nombre de objeto, nombre del archivo qeu voy a guardar (y su ruta en nuestra PC), y el parámetro row.names que ya vimos
+write.xlsx(importaciones_bienes_cap_prod, "importaciones.xlsx", row.names=FALSE)
+```
+### Formatos
+Hasta el momento vimos los formatos ```.xlsx```, ```.xls```, ```.csv``` y ```.txt```. Otros muy populares son:
+
+* json
+* xml
+* geojson
+* kml
+* shp
+* ods
 ### Ambiente de trabajo
 
 - Directorio de trabajo. Se obtiene el actual con la función `getwd()`, es *hacia donde apunta el código*, es decir a donde lee los archivos o donde graba los archivos por default. Para setear otro directorio de trabajo, se debe utiliza la función ```setwd()```
@@ -389,6 +440,14 @@ Rstudio tiene una herramienta muy útil de trabajo que son los **proyectos**. Es
 * [Data Science Livebook - Pablo Casas](https://livebook.datascienceheroes.com/)
 * [Cookbook for R](http://www.cookbook-r.com/) Muchas soluciones a algunos problemas básicos de R
 * Cheatsheets! Por ejemplo, [Data Science Cheatsheet](https://github.com/ml874/Data-Science-Cheatsheet) o [R Cheatsheet](https://www.rstudio.com/resources/cheatsheets/)
+
+### Algunos ejercicios
+
+* Probar armar diversos vectores usando: valores numéricos, de texto ("character") y probar transformaciones de los mismos.
+* Con dichos vectores, formar un dataframe.
+* Probar levantar archivos excel, csv y txt.
+* Probar las funciones que vimos en la clase.
+* Grabar archivos en excel y csv.
 
 
 

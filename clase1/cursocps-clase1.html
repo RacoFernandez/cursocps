@@ -250,7 +250,6 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Introducción a la Ciencia de Datos en R - CPS</h1>
-<h3 class="subtitle">Referencias</h3>
 <h4 class="author">Ramiro Oliverio Fernández</h4>
 <h4 class="date">2019-09-20</h4>
 
@@ -412,6 +411,8 @@ ejvector</code></pre>
 <p>Podemos realizar diferentes operaciones sobre ese vector</p>
 <pre class="r"><code>ejvector * 2</code></pre>
 <pre><code>## [1] 2 6 8</code></pre>
+<p>Utilizando los dos puntos <code>:</code> indicamos a R que vaya de un valor al otro, sirve para generar un vector por ejemplo.</p>
+<pre class="r"><code>ejvector2 &lt;- c(1:5)</code></pre>
 <p>Podemos crear un vector que contenga diferentes <code>strings</code></p>
 <pre class="r"><code>utiles &lt;- c(&quot;Lapicera&quot;, &quot;Lápiz&quot;, &quot;Goma de borrar&quot;)
 utiles</code></pre>
@@ -542,11 +543,11 @@ lista</code></pre>
 <p>Vamos a instalar algunas librerías que utilizaremos:</p>
 <pre class="r"><code>#install.packages(c(&quot;tidyverse&quot;, &quot;data.table&quot;, &quot;openxlsx&quot;, &quot;readxl&quot;, &quot;xlsx&quot;, &quot;ggthemes&quot;),repos = &quot;http://cran.us.r-project.org&quot;)</code></pre>
 </div>
-<div id="lecturaescrituras-de-archivos" class="section level3">
-<h3>Lectura/escrituras de archivos</h3>
+<div id="lecturaescrituras-de-archivos-csvtxt" class="section level3">
+<h3>Lectura/escrituras de archivos – CSV/TXT</h3>
 <p>Vamos a empezar viendo cómo levantar archivos en los formatos de datos tabulares más clásicos: csv, txt y excel.</p>
 <p>Hay muchas funciones para levantar csv o txt, sobre todo cambian: el delimitador, el encabezado y el separador decimal.</p>
-<p>Vamos a utilizar la función <code>read.csv</code> (pero podría ser <code>read.table</code>, <code>fread</code>, <code>read.delim</code>, en general cambian sus parámetros default, hay algunas más óptimas que otras). Le estamos pasando como parámetro de ubicación una URL (generada por el portal de datos de CABA), pero puede ser la ubicación de un archivo en la pc local (línea de código comentada)</p>
+<p>Vamos a utilizar la función <code>read.csv</code> (pero podría ser <code>read.table</code>, <code>fread</code>, <code>read.delim</code>, en general cambian sus parámetros default, hay algunas más óptimas que otras, aunque por ejemplo <code>fread()</code> no es de R Base). Le estamos pasando como parámetro de ubicación una URL (generada por el portal de datos de CABA), pero puede ser la ubicación de un archivo en la pc local (línea de código comentada)</p>
 <pre class="r"><code>radares &lt;- read.csv(&quot;http://cdn.buenosaires.gob.ar/datosabiertos/datasets/flujo-vehicular-por-radares-ausa/flujo-vehicular-por-radares-2019.csv&quot;, header=TRUE, sep=',', dec='.')
 head(radares)</code></pre>
 <pre><code>##   X      fecha hora autopista_nombre     disp_nombre disp_ubicacion
@@ -565,8 +566,10 @@ head(radares)</code></pre>
 ## 6               A -34.53767 -58.45967      834</code></pre>
 <pre class="r"><code>#radares &lt;- read.csv(&quot;C:/Users/rama_/Desktop/Ramiro/Transito radares ausa/flujo-vehicular-por-radares-2019.csv&quot;, header=TRUE, sep=',', dec='.')
 # si esta en mi directorio de trabajo, directamente:
-#radares &lt;- read.csv(&quot;flujo-vehicular-por-radares-2019.csv&quot;, header=TRUE, sep=',', dec='.')</code></pre>
-<p>Una vez que tenemos cargado un dataframe, podemos aplicar varias funciones para explorarlo.</p>
+#radares &lt;- read.csv(&quot;flujo-vehicular-por-radares-2019.csv&quot;, header=TRUE, sep=',', dec='.')
+#probamos levantar un archivo .txt
+indicadoresmoc &lt;- read.csv(&quot;http://cdn.buenosaires.gob.ar/datosabiertos/datasets/mapa-de-oportunidades-comerciales-moc/COMERCIOS.TXT&quot;, sep='\t')</code></pre>
+<p>Una vez que tenemos cargado un dataframe (`<code>radares</code> en este caso), podemos aplicar varias funciones para explorarlo.</p>
 <p>Podemos “imprimir” (deriva de la función <code>print</code>) sus primeros o sus últimos registros</p>
 <pre class="r"><code>head(radares)</code></pre>
 <pre><code>##   X      fecha hora autopista_nombre     disp_nombre disp_ubicacion
@@ -690,11 +693,28 @@ head(radareslugonesydelle)</code></pre>
 <p>Para remover todos los objeto del ambiente, usamos</p>
 <pre class="r"><code>rm(list=ls())</code></pre>
 </div>
-<div id="ambiente-de-trabajo" class="section level3">
-<h3>Ambiente de trabajo</h3>
+<div id="lecturaescrituras-de-archivos-excel" class="section level3">
+<h3>Lectura/escrituras de archivos – Excel</h3>
+<p>Para leer y escribir archivos en excel, también hay varias funciones. A diferencia de csv y txt (son formatos libres y abiertos) pueden ser tanto la librería <code>openxlsx</code>, <code>readxl</code> o <code>xlsx</code>. Ahora levantaremos un archivo con formato <code>.xlsx</code>, que es el formato abierto basado en XML (similar a HTML) que se usa en muchos archivos excel. También los archivos excel pueden estar en <code>.xls</code>, que es formato propietario de MS Office (Excel).</p>
+<pre class="r"><code>#install.packages(&quot;openxlsx&quot;)
+library(&quot;openxlsx&quot;)
+importaciones_bienes_cap_prod &lt;- read.xlsx(&quot;http://estadisticas.produccion.gob.ar/app/documentos/bsk-prod-clasificacion.xlsx&quot;)
+#para grabar, paso los parametros de: nombre de objeto, nombre del archivo qeu voy a guardar (y su ruta en nuestra PC), y el parámetro row.names que ya vimos
+write.xlsx(importaciones_bienes_cap_prod, &quot;importaciones.xlsx&quot;, row.names=FALSE)</code></pre>
+<pre><code>## Note: zip::zip() is deprecated, please use zip::zipr() instead</code></pre>
+</div>
+<div id="formatos" class="section level3">
+<h3>Formatos</h3>
+<p>Hasta el momento vimos los formatos <code>.xlsx</code>, <code>.xls</code>, <code>.csv</code> y <code>.txt</code>. Otros muy populares son:</p>
 <ul>
+<li>json</li>
+<li>xml</li>
+<li>geojson</li>
+<li>kml</li>
+<li>shp</li>
+<li><p>ods ### Ambiente de trabajo</p></li>
 <li>Directorio de trabajo. Se obtiene el actual con la función <code>getwd()</code>, es <em>hacia donde apunta el código</em>, es decir a donde lee los archivos o donde graba los archivos por default. Para setear otro directorio de trabajo, se debe utiliza la función <code>setwd()</code></li>
-<li>Ambiente: Muestra los plots, nos permite navegar por nuestros directorios, guarda la información de valores y de datos cargados, muestra las librerías instaladas como cargadas y también tiene un display de ayuda, que se accede antecediendo el símbolo <code>?</code> antes del nombre de una función y al ejecutar esa línea nos lleva a la documentación oficial de la función.</li>
+<li><p>Ambiente: Muestra los plots, nos permite navegar por nuestros directorios, guarda la información de valores y de datos cargados, muestra las librerías instaladas como cargadas y también tiene un display de ayuda, que se accede antecediendo el símbolo <code>?</code> antes del nombre de una función y al ejecutar esa línea nos lleva a la documentación oficial de la función.</p></li>
 </ul>
 <p>Algunas aclaraciones:</p>
 <ol style="list-style-type: decimal">
@@ -719,6 +739,16 @@ head(radareslugonesydelle)</code></pre>
 <li><a href="https://livebook.datascienceheroes.com/">Data Science Livebook - Pablo Casas</a></li>
 <li><a href="http://www.cookbook-r.com/">Cookbook for R</a> Muchas soluciones a algunos problemas básicos de R</li>
 <li>Cheatsheets! Por ejemplo, <a href="https://github.com/ml874/Data-Science-Cheatsheet">Data Science Cheatsheet</a> o <a href="https://www.rstudio.com/resources/cheatsheets/">R Cheatsheet</a></li>
+</ul>
+</div>
+<div id="algunos-ejercicios" class="section level3">
+<h3>Algunos ejercicios</h3>
+<ul>
+<li>Probar armar diversos vectores usando: valores numéricos, de texto (“character”) y probar transformaciones de los mismos.</li>
+<li>Con dichos vectores, formar un dataframe.</li>
+<li>Probar levantar archivos excel, csv y txt.</li>
+<li>Probar las funciones que vimos en la clase.</li>
+<li>Grabar archivos en excel y csv.</li>
 </ul>
 </div>
 </div>
