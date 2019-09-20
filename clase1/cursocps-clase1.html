@@ -259,7 +259,7 @@ div.tocify {
 
 <div id="referencias" class="section level3">
 <h3>Referencias</h3>
-<p>Este curso está basado en: - <a href="https://bitsandbricks.github.io/ciencia_de_datos_gente_sociable/">Ciencia de Datos para Gente Sociable</a> de Antonio Vazquez Brust - <a href="https://github.com/DiegoKoz/intro_ds">Introducción a Data Science</a> de Diego Kozlowski y Natsumi Shokida - Clases de Santiago Banchero y Juan Manuel Fernández en la Maestría de Data Mining de la UBA. <a href="https://dmuba.github.io/" class="uri">https://dmuba.github.io/</a></p>
+<p>Este curso está basado en: * <a href="https://bitsandbricks.github.io/ciencia_de_datos_gente_sociable/">Ciencia de Datos para Gente Sociable</a> de Antonio Vazquez Brust * <a href="https://github.com/DiegoKoz/intro_ds">Introducción a Data Science</a> de Diego Kozlowski y Natsumi Shokida * Clases de Santiago Banchero y Juan Manuel Fernández en la Maestría de Data Mining de la UBA. <a href="https://dmuba.github.io/" class="uri">https://dmuba.github.io/</a></p>
 </div>
 <div id="introduccion-breve-a-data-science" class="section level2">
 <h2>Introducción breve a Data Science</h2>
@@ -523,8 +523,8 @@ lista</code></pre>
 <pre><code>## [[1]]
 ## [1] 1 2 3</code></pre>
 </div>
-<div id="caracteres-especiales" class="section level3">
-<h3>Caracteres especiales</h3>
+<div id="uso-de-ciertos-caracteres-en-r" class="section level3">
+<h3>Uso de ciertos caracteres en R</h3>
 <ul>
 <li>R distingue entre minúsculas y mayúsculas</li>
 <li>El numeral <code>#</code> se utiliza para hacer comentarios, todo lo que vaya después del mismo no es “leído” por R. Se debe utilizar por línea que se quiera comentar.</li>
@@ -536,6 +536,159 @@ lista</code></pre>
 </div>
 <div id="instalar-librerias" class="section level3">
 <h3>Instalar librerías</h3>
+<p>Hasta ahora, hemos trabajado con lo que se llama <code>R Base</code>, es decir las funciones que R contiene como base, pero gran parte de su riqueza está en las librerías que crean sus usuarios.</p>
+<p>Se instalan con el comando <code>install.packages()</code>, cuyo parámetro es el nombre de la librería entre paréntesis. También se puede pasar un vector de nombres de librerías para instalar varias a la vez.</p>
+<p>Cada vez que se inicia una sesión en R, se debe llamar a las librerías que deseamos usar con el parámetro <code>library()</code></p>
+<p>Vamos a instalar algunas librerías que utilizaremos:</p>
+<pre class="r"><code>#install.packages(c(&quot;tidyverse&quot;, &quot;data.table&quot;, &quot;openxlsx&quot;, &quot;readxl&quot;, &quot;xlsx&quot;, &quot;ggthemes&quot;),repos = &quot;http://cran.us.r-project.org&quot;)</code></pre>
+</div>
+<div id="lecturaescrituras-de-archivos" class="section level3">
+<h3>Lectura/escrituras de archivos</h3>
+<p>Vamos a empezar viendo cómo levantar archivos en los formatos de datos tabulares más clásicos: csv, txt y excel.</p>
+<p>Hay muchas funciones para levantar csv o txt, sobre todo cambian: el delimitador, el encabezado y el separador decimal.</p>
+<p>Vamos a utilizar la función <code>read.csv</code> (pero podría ser <code>read.table</code>, <code>fread</code>, <code>read.delim</code>, en general cambian sus parámetros default, hay algunas más óptimas que otras). Le estamos pasando como parámetro de ubicación una URL (generada por el portal de datos de CABA), pero puede ser la ubicación de un archivo en la pc local (línea de código comentada)</p>
+<pre class="r"><code>radares &lt;- read.csv(&quot;http://cdn.buenosaires.gob.ar/datosabiertos/datasets/flujo-vehicular-por-radares-ausa/flujo-vehicular-por-radares-2019.csv&quot;, header=TRUE, sep=',', dec='.')
+head(radares)</code></pre>
+<pre><code>##   X      fecha hora autopista_nombre     disp_nombre disp_ubicacion
+## 1 0 2019-01-01    0    AU 4  Lugones   RD165 Dorrego           4.74
+## 2 1 2019-01-01    0    AU 4  Lugones    RD166 Ombues           5.50
+## 3 2 2019-01-01    0    AU 4  Lugones RD168 Juramento           7.20
+## 4 3 2019-01-01    0    AU 4  Lugones    RD169 Monroe           8.11
+## 5 4 2019-01-01    0    AU 4  Lugones   RD170 Udaondo           8.68
+## 6 5 2019-01-01    0    AU 4  Lugones      RD171 Esma           9.90
+##   seccion_sentido       lat      long cantidad
+## 1               A -34.56336 -58.41529      618
+## 2               A -34.56044 -58.41908      797
+## 3               A -34.54977 -58.43602       66
+## 4               A -34.54629 -58.44224      857
+## 5               A -34.54293 -58.44901      861
+## 6               A -34.53767 -58.45967      834</code></pre>
+<pre class="r"><code>#radares &lt;- read.csv(&quot;C:/Users/rama_/Desktop/Ramiro/Transito radares ausa/flujo-vehicular-por-radares-2019.csv&quot;, header=TRUE, sep=',', dec='.')
+# si esta en mi directorio de trabajo, directamente:
+#radares &lt;- read.csv(&quot;flujo-vehicular-por-radares-2019.csv&quot;, header=TRUE, sep=',', dec='.')</code></pre>
+<p>Una vez que tenemos cargado un dataframe, podemos aplicar varias funciones para explorarlo.</p>
+<p>Podemos “imprimir” (deriva de la función <code>print</code>) sus primeros o sus últimos registros</p>
+<pre class="r"><code>head(radares)</code></pre>
+<pre><code>##   X      fecha hora autopista_nombre     disp_nombre disp_ubicacion
+## 1 0 2019-01-01    0    AU 4  Lugones   RD165 Dorrego           4.74
+## 2 1 2019-01-01    0    AU 4  Lugones    RD166 Ombues           5.50
+## 3 2 2019-01-01    0    AU 4  Lugones RD168 Juramento           7.20
+## 4 3 2019-01-01    0    AU 4  Lugones    RD169 Monroe           8.11
+## 5 4 2019-01-01    0    AU 4  Lugones   RD170 Udaondo           8.68
+## 6 5 2019-01-01    0    AU 4  Lugones      RD171 Esma           9.90
+##   seccion_sentido       lat      long cantidad
+## 1               A -34.56336 -58.41529      618
+## 2               A -34.56044 -58.41908      797
+## 3               A -34.54977 -58.43602       66
+## 4               A -34.54629 -58.44224      857
+## 5               A -34.54293 -58.44901      861
+## 6               A -34.53767 -58.45967      834</code></pre>
+<pre class="r"><code>tail(radares)</code></pre>
+<pre><code>##             X      fecha hora autopista_nombre        disp_nombre
+## 141050 141049 2019-08-30   23    AU Dellepiane       RD105 Homero
+## 141051 141050 2019-08-30   23    AU Dellepiane        RD106 Zinny
+## 141052 141051 2019-08-30   23    AU Dellepiane        RD106 Zinny
+## 141053 141052 2019-08-30   23    AU Dellepiane RD108 Ramal a 27f.
+## 141054 141053 2019-08-30   23    AU Dellepiane    RD110 Fernandez
+## 141055 141054 2019-08-30   23    AU Dellepiane      RD111 Ramal 9
+##        disp_ubicacion seccion_sentido       lat      long cantidad
+## 141050           3.26               B -34.66044 -58.47124     1961
+## 141051           3.88               A -34.65465 -58.46901     1417
+## 141052           3.88               B -34.65465 -58.46901     1844
+## 141053           4.30               A -34.65369 -58.46812      460
+## 141054           4.30               B -34.65288 -58.46818      130
+## 141055           0.18               B -34.65061 -58.46677      202</code></pre>
+<p>Podemos ver un resumen de sus variables</p>
+<pre class="r"><code>summary(radares)</code></pre>
+<pre><code>##        X                 fecha             hora      
+##  Min.   :     0   2019-01-05:   768   Min.   : 0.00  
+##  1st Qu.: 35264   2019-01-06:   768   1st Qu.: 5.00  
+##  Median : 70527   2019-01-20:   768   Median :11.00  
+##  Mean   : 70527   2019-01-24:   768   Mean   :11.42  
+##  3rd Qu.:105791   2019-01-07:   763   3rd Qu.:17.00  
+##  Max.   :141054   2019-01-18:   763   Max.   :23.00  
+##                   (Other)   :136457                  
+##           autopista_nombre             disp_nombre    disp_ubicacion 
+##  AU 4  Lugones    :29363   RD134 Ituzaingo   : 9986   Min.   :0.160  
+##  AU 5 Cantilo     :16514   RD105 Homero      : 9912   1st Qu.:1.160  
+##  AU 9 de Julio Sur:52444   RD106 Zinny       : 8794   Median :3.260  
+##  AU Dellepiane    :42734   RD100 Montiel     : 8492   Mean   :3.896  
+##                            RD131 Brandsen B  : 5013   3rd Qu.:7.200  
+##                            RD108 Ramal a 27f.: 4990   Max.   :9.900  
+##                            (Other)           :93868                  
+##  seccion_sentido      lat              long           cantidad    
+##  A:72509         Min.   :-34.68   Min.   :-58.48   Min.   :    0  
+##  B:68546         1st Qu.:-34.65   1st Qu.:-58.47   1st Qu.: 1036  
+##                  Median :-34.64   Median :-58.44   Median : 2599  
+##                  Mean   :-34.62   Mean   :-58.43   Mean   : 2856  
+##                  3rd Qu.:-34.55   3rd Qu.:-58.38   3rd Qu.: 4045  
+##                  Max.   :-34.54   Max.   :-58.37   Max.   :10397  
+## </code></pre>
+<p>Los nombres de sus columnas (también se puede usar <code>names</code>, <code>colnames</code> aplica para matrices también, aunque names aplica para vectores)</p>
+<pre class="r"><code>colnames(radares)</code></pre>
+<pre><code>##  [1] &quot;X&quot;                &quot;fecha&quot;            &quot;hora&quot;            
+##  [4] &quot;autopista_nombre&quot; &quot;disp_nombre&quot;      &quot;disp_ubicacion&quot;  
+##  [7] &quot;seccion_sentido&quot;  &quot;lat&quot;              &quot;long&quot;            
+## [10] &quot;cantidad&quot;</code></pre>
+<p>Cantidad de filas y cantidad de columnas. <code>length</code> también es muy utilizado, ya que aplica para otros tipos de objetos.</p>
+<pre class="r"><code>nrow(radares)</code></pre>
+<pre><code>## [1] 141055</code></pre>
+<pre class="r"><code>ncol(radares)</code></pre>
+<pre><code>## [1] 10</code></pre>
+<pre class="r"><code>length(radares)</code></pre>
+<pre><code>## [1] 10</code></pre>
+<p>La función <code>unique()</code> nos devuelve un vector con valores únicos desduplicados.</p>
+<pre class="r"><code>unique(radares$autopista_nombre)</code></pre>
+<pre><code>## [1] AU 4  Lugones     AU 5 Cantilo      AU 9 de Julio Sur AU Dellepiane    
+## Levels: AU 4  Lugones AU 5 Cantilo AU 9 de Julio Sur AU Dellepiane</code></pre>
+<p>La función <code>table()</code> devuelve una tabla de frecuencias absolutas con la cantidad de registros por categoría para la variable.</p>
+<pre class="r"><code>tabla &lt;- table(radares$autopista_nombre)
+tabla</code></pre>
+<pre><code>## 
+##     AU 4  Lugones      AU 5 Cantilo AU 9 de Julio Sur     AU Dellepiane 
+##             29363             16514             52444             42734</code></pre>
+<p>Con <code>prop.table</code></p>
+<pre class="r"><code>prop.table(tabla)</code></pre>
+<pre><code>## 
+##     AU 4  Lugones      AU 5 Cantilo AU 9 de Julio Sur     AU Dellepiane 
+##         0.2081670         0.1170749         0.3717982         0.3029598</code></pre>
+<p>Puedo hacer una tabla bi-variada también</p>
+<pre class="r"><code>table(radares$autopista_nombre, radares$seccion_sentido)</code></pre>
+<pre><code>##                    
+##                         A     B
+##   AU 4  Lugones     29363     0
+##   AU 5 Cantilo          0 16514
+##   AU 9 de Julio Sur 23990 28454
+##   AU Dellepiane     19156 23578</code></pre>
+<p>Obtener la media</p>
+<pre class="r"><code>mean(radares$cantidad, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 2856.372</code></pre>
+<p>Sumar una columna numérica</p>
+<pre class="r"><code>sum(radares$cantidad)</code></pre>
+<pre><code>## [1] 402905517</code></pre>
+<p>Subsetear el dataframe filtrandolo!</p>
+<pre class="r"><code>radareslugonesydelle &lt;- subset(radares, (radares$autopista_nombre=='AU 4  Lugones')|(radares$autopista_nombre=='AU Dellepiane'))
+head(radareslugonesydelle)</code></pre>
+<pre><code>##   X      fecha hora autopista_nombre     disp_nombre disp_ubicacion
+## 1 0 2019-01-01    0    AU 4  Lugones   RD165 Dorrego           4.74
+## 2 1 2019-01-01    0    AU 4  Lugones    RD166 Ombues           5.50
+## 3 2 2019-01-01    0    AU 4  Lugones RD168 Juramento           7.20
+## 4 3 2019-01-01    0    AU 4  Lugones    RD169 Monroe           8.11
+## 5 4 2019-01-01    0    AU 4  Lugones   RD170 Udaondo           8.68
+## 6 5 2019-01-01    0    AU 4  Lugones      RD171 Esma           9.90
+##   seccion_sentido       lat      long cantidad
+## 1               A -34.56336 -58.41529      618
+## 2               A -34.56044 -58.41908      797
+## 3               A -34.54977 -58.43602       66
+## 4               A -34.54629 -58.44224      857
+## 5               A -34.54293 -58.44901      861
+## 6               A -34.53767 -58.45967      834</code></pre>
+<p>Puedo guardar este objeto en mi PC local con <code>write.csv()</code> con los parámetros: objeto a guardar, nombre (y ubicación, aquí por default se me guardará en mi directorio predeterminado) y la última opción evita que R guarde el índice de las filas</p>
+<pre class="r"><code>write.csv(radareslugonesydelle, &quot;radares-lugones-y-dellepiane.csv&quot;, row.names = FALSE)</code></pre>
+<p>Para remover un objeto del ambiente, usamos</p>
+<pre class="r"><code>rm(radares)</code></pre>
+<p>Para remover todos los objeto del ambiente, usamos</p>
+<pre class="r"><code>rm(list=ls())</code></pre>
 </div>
 <div id="ambiente-de-trabajo" class="section level3">
 <h3>Ambiente de trabajo</h3>
@@ -558,9 +711,15 @@ lista</code></pre>
 <li><strong>Rproject</strong>: Es un archivo que define la metadata del proyecto y nos permite tener ambientes “independientes”</li>
 <li><strong>RDS y Rdata</strong>: Dos formatos de archivos propios de R para guardar datos. Sirven para cargar data rápidamente.</li>
 </ul>
-<p>length head, tail, summary, shape matrix ambiente (get,set) funciones help Tidy</p>
-<p>and/or typeof class</p>
-<p>rm</p>
+</div>
+<div id="lecturas-recomendadas" class="section level3">
+<h3>Lecturas recomendadas</h3>
+<ul>
+<li><a href="https://vita.had.co.nz/papers/tidy-data.pdf">Tidy Data - Hadley Wickham</a> Uno de los principales impulsores de R, en este paper explica lo que se considera “Tidy Data”</li>
+<li><a href="https://livebook.datascienceheroes.com/">Data Science Livebook - Pablo Casas</a></li>
+<li><a href="http://www.cookbook-r.com/">Cookbook for R</a> Muchas soluciones a algunos problemas básicos de R</li>
+<li>Cheatsheets! Por ejemplo, <a href="https://github.com/ml874/Data-Science-Cheatsheet">Data Science Cheatsheet</a> o <a href="https://www.rstudio.com/resources/cheatsheets/">R Cheatsheet</a></li>
+</ul>
 </div>
 </div>
 

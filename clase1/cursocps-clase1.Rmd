@@ -16,9 +16,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Referencias
 
 Este curso está basado en:
-- [Ciencia de Datos para Gente Sociable](https://bitsandbricks.github.io/ciencia_de_datos_gente_sociable/) de Antonio Vazquez Brust 
-- [Introducción a Data Science](https://github.com/DiegoKoz/intro_ds) de Diego Kozlowski y Natsumi Shokida
-- Clases de Santiago Banchero y Juan Manuel Fernández en la Maestría de Data Mining de la UBA. https://dmuba.github.io/
+* [Ciencia de Datos para Gente Sociable](https://bitsandbricks.github.io/ciencia_de_datos_gente_sociable/) de Antonio Vazquez Brust 
+* [Introducción a Data Science](https://github.com/DiegoKoz/intro_ds) de Diego Kozlowski y Natsumi Shokida
+* Clases de Santiago Banchero y Juan Manuel Fernández en la Maestría de Data Mining de la UBA. https://dmuba.github.io/
 
 ## Introducción breve a Data Science
 
@@ -285,7 +285,7 @@ Cada vez que se inicia una sesión en R, se debe llamar a las librerías que des
 
 Vamos a instalar algunas librerías que utilizaremos:
 ```{r}
-install.packages(c("tidyverse", "data.table", "openxlsx", "readxl", "xlsx", "ggthemes"))
+#install.packages(c("tidyverse", "data.table", "openxlsx", "readxl", "xlsx", "ggthemes"),repos = "http://cran.us.r-project.org")
 ```
 
 ### Lectura/escrituras de archivos
@@ -296,7 +296,7 @@ Hay muchas funciones para levantar csv o txt, sobre todo cambian: el delimitador
 Vamos a utilizar la función ```read.csv``` (pero podría ser ```read.table```, ```fread```, ```read.delim```, en general cambian sus parámetros default, hay algunas más óptimas que otras). Le estamos pasando como parámetro de ubicación una URL (generada por el portal de datos de CABA), pero puede ser la ubicación de un archivo en la pc local (línea de código comentada) 
 ```{r}
 radares <- read.csv("http://cdn.buenosaires.gob.ar/datosabiertos/datasets/flujo-vehicular-por-radares-ausa/flujo-vehicular-por-radares-2019.csv", header=TRUE, sep=',', dec='.')
-radares
+head(radares)
 #radares <- read.csv("C:/Users/rama_/Desktop/Ramiro/Transito radares ausa/flujo-vehicular-por-radares-2019.csv", header=TRUE, sep=',', dec='.')
 # si esta en mi directorio de trabajo, directamente:
 #radares <- read.csv("flujo-vehicular-por-radares-2019.csv", header=TRUE, sep=',', dec='.')
@@ -350,7 +350,7 @@ sum(radares$cantidad)
 Subsetear el dataframe filtrandolo!
 ```{r}
 radareslugonesydelle <- subset(radares, (radares$autopista_nombre=='AU 4  Lugones')|(radares$autopista_nombre=='AU Dellepiane'))
-radareslugonesydelle
+head(radareslugonesydelle)
 ```
 Puedo guardar este objeto en mi PC local con ```write.csv()``` con los parámetros: objeto a guardar, nombre (y ubicación, aquí por default se me guardará en mi directorio predeterminado) y la última opción evita que R guarde el índice de las filas
 ```{r}
@@ -385,10 +385,10 @@ Rstudio tiene una herramienta muy útil de trabajo que son los **proyectos**. Es
 
 ### Lecturas recomendadas
 
-[Tidy Data - Hadley Wickham](https://vita.had.co.nz/papers/tidy-data.pdf) Uno de los principales impulsores de R, en este paper explica lo que se considera "Tidy Data"
-[Data Science Livebook - Pablo Casas](https://livebook.datascienceheroes.com/)
-[Cookbook for R](http://www.cookbook-r.com/) Muchas soluciones a algunos problemas básicos de R
-Cheatsheets! Por ejemplo, [Data Science Cheatsheet](https://github.com/ml874/Data-Science-Cheatsheet) o [R Cheatsheet](https://www.rstudio.com/resources/cheatsheets/)
+* [Tidy Data - Hadley Wickham](https://vita.had.co.nz/papers/tidy-data.pdf) Uno de los principales impulsores de R, en este paper explica lo que se considera "Tidy Data"
+* [Data Science Livebook - Pablo Casas](https://livebook.datascienceheroes.com/)
+* [Cookbook for R](http://www.cookbook-r.com/) Muchas soluciones a algunos problemas básicos de R
+* Cheatsheets! Por ejemplo, [Data Science Cheatsheet](https://github.com/ml874/Data-Science-Cheatsheet) o [R Cheatsheet](https://www.rstudio.com/resources/cheatsheets/)
 
 
 
