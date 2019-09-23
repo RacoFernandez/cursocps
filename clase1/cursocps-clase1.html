@@ -10,7 +10,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Ramiro Oliverio Fernández" />
+<meta name="author" content="Ramiro Oliverio Fernández, Hernán Escudero" />
 
 <meta name="date" content="2019-09-20" />
 
@@ -250,7 +250,7 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Introducción a la Ciencia de Datos en R - CPS</h1>
-<h4 class="author">Ramiro Oliverio Fernández</h4>
+<h4 class="author">Ramiro Oliverio Fernández, Hernán Escudero</h4>
 <h4 class="date">2019-09-20</h4>
 
 </div>
@@ -437,7 +437,7 @@ ultimoutil</code></pre>
 <pre class="r"><code>utiles[3] &lt;- &quot;sacapuntas&quot; 
 utiles</code></pre>
 <pre><code>## [1] &quot;Lapicera&quot;   &quot;Lápiz&quot;      &quot;sacapuntas&quot;</code></pre>
-<p>Hay varias funciones que nos permiten generar vectores. Por ejemplo, <code>rep()</code> genera repeticiones con ciertos parámetros que son <code>èach</code> para indicar el N de repeticiones y <code>length</code> para indicar el largo del vector. Sin ```length````, cada valor del vector se repite la cantidad N de veces indicada 1 sola vez para cada valor. También funciona para valores numéricos.</p>
+<p>Hay varias funciones que nos permiten generar vectores. Por ejemplo, <code>rep()</code> genera repeticiones con ciertos parámetros que son <code>èach</code> para indicar el N de repeticiones y <code>length</code> para indicar el largo del vector. Sin <code>length</code>, cada valor del vector se repite la cantidad N de veces indicada 1 sola vez para cada valor. También funciona para valores numéricos.</p>
 <pre class="r"><code>colores &lt;- rep(c(&quot;verde&quot;, &quot;rojo&quot;), each=4, length=18)
 colores</code></pre>
 <pre><code>##  [1] &quot;verde&quot; &quot;verde&quot; &quot;verde&quot; &quot;verde&quot; &quot;rojo&quot;  &quot;rojo&quot;  &quot;rojo&quot;  &quot;rojo&quot; 
@@ -538,7 +538,7 @@ lista</code></pre>
 </div>
 <div id="matrices" class="section level3">
 <h3>Matrices</h3>
-<p>Las matrices son estructuras bidimensionales (como los dataframe), donde los valores son del mismo tipo (como en los vectores). Son útiles ya que, al igual que con las listas, muchas funciones o modelos de R devuelven matrices o las toman como argumento. Se generaon con <code>matrix()</code>, con los argumentos de la data a pasarle, la cantidad de filas y columnas y el parámetro `<code>byrow</code> que indica si la matriz se completa por las filas o por las columnas (por default es <code>TRUE</code>, es decir se llena por filas).</p>
+<p>Las matrices son estructuras bidimensionales (como los dataframe), donde los valores son del mismo tipo (como en los vectores). Son útiles ya que, al igual que con las listas, muchas funciones o modelos de R devuelven matrices o las toman como argumento. Se generaon con <code>matrix()</code>, con los argumentos de la data a pasarle, la cantidad de filas y columnas y el parámetro <code>byrow</code> que indica si la matriz se completa por las filas o por las columnas (por default es <code>TRUE</code>, es decir se llena por filas).</p>
 <pre class="r"><code>matrix (1:8, nrow=2, ncol=4, byrow = TRUE)</code></pre>
 <pre><code>##      [,1] [,2] [,3] [,4]
 ## [1,]    1    2    3    4
@@ -589,7 +589,7 @@ head(radares)</code></pre>
 #radares &lt;- read.csv(&quot;flujo-vehicular-por-radares-2019.csv&quot;, header=TRUE, sep=',', dec='.')
 #probamos levantar un archivo .txt
 indicadoresmoc &lt;- read.csv(&quot;http://cdn.buenosaires.gob.ar/datosabiertos/datasets/mapa-de-oportunidades-comerciales-moc/COMERCIOS.TXT&quot;, sep='\t')</code></pre>
-<p>Una vez que tenemos cargado un dataframe (`<code>radares</code> en este caso), podemos aplicar varias funciones para explorarlo.</p>
+<p>Una vez que tenemos cargado un dataframe (<code>radares</code> en este caso), podemos aplicar varias funciones para explorarlo.</p>
 <p>Podemos “imprimir” (deriva de la función <code>print</code>) sus primeros o sus últimos registros</p>
 <pre class="r"><code>head(radares)</code></pre>
 <pre><code>##   X      fecha hora autopista_nombre     disp_nombre disp_ubicacion
@@ -670,7 +670,7 @@ tabla</code></pre>
 <pre><code>## 
 ##     AU 4  Lugones      AU 5 Cantilo AU 9 de Julio Sur     AU Dellepiane 
 ##             29363             16514             52444             42734</code></pre>
-<p>Con <code>prop.table</code></p>
+<p>Con <code>prop.table</code> vemos la tabla de frecuencias relativa, la usamos con el objeto <code>tabla</code> creado más arriba</p>
 <pre class="r"><code>prop.table(tabla)</code></pre>
 <pre><code>## 
 ##     AU 4  Lugones      AU 5 Cantilo AU 9 de Julio Sur     AU Dellepiane 

@@ -1,6 +1,6 @@
 ---
 title: "Introducción a la Ciencia de Datos en R - CPS"
-author: "Ramiro Oliverio Fernández"
+author: "Ramiro Oliverio Fernández, Hernán Escudero"
 date: "2019-09-20"
 output:
   html_document:
@@ -219,7 +219,7 @@ También podemos usar la posición en ese vector para reemplazar el valor
 utiles[3] <- "sacapuntas" 
 utiles
 ```
-Hay varias funciones que nos permiten generar vectores. Por ejemplo, ```rep()``` genera repeticiones con ciertos parámetros que son ```èach``` para indicar el N de repeticiones y ```length``` para indicar el largo del vector. Sin ```length````, cada valor del vector se repite la cantidad N de veces indicada 1 sola vez para cada valor. También funciona para valores numéricos.
+Hay varias funciones que nos permiten generar vectores. Por ejemplo, ```rep()``` genera repeticiones con ciertos parámetros que son ```èach``` para indicar el N de repeticiones y ```length``` para indicar el largo del vector. Sin ```length```, cada valor del vector se repite la cantidad N de veces indicada 1 sola vez para cada valor. También funciona para valores numéricos.
 
 ```{r}
 colores <- rep(c("verde", "rojo"), each=4, length=18)
@@ -283,7 +283,7 @@ lista[5]
 ```
 ### Matrices
 
-Las matrices son estructuras bidimensionales (como los dataframe), donde los valores son del mismo tipo (como en los vectores). Son útiles ya que, al igual que con las listas, muchas funciones o modelos de R devuelven matrices o las toman como argumento. Se generaon con ```matrix()```, con los argumentos de la data a pasarle, la cantidad de filas y columnas y el parámetro ````byrow``` que indica si la matriz se completa por las filas o por las columnas (por default es ```TRUE```, es decir se llena por filas).
+Las matrices son estructuras bidimensionales (como los dataframe), donde los valores son del mismo tipo (como en los vectores). Son útiles ya que, al igual que con las listas, muchas funciones o modelos de R devuelven matrices o las toman como argumento. Se generaon con ```matrix()```, con los argumentos de la data a pasarle, la cantidad de filas y columnas y el parámetro ```byrow``` que indica si la matriz se completa por las filas o por las columnas (por default es ```TRUE```, es decir se llena por filas).
 
 ```{r}
 matrix (1:8, nrow=2, ncol=4, byrow = TRUE)
@@ -325,7 +325,7 @@ head(radares)
 #probamos levantar un archivo .txt
 indicadoresmoc <- read.csv("http://cdn.buenosaires.gob.ar/datosabiertos/datasets/mapa-de-oportunidades-comerciales-moc/COMERCIOS.TXT", sep='\t')
 ```
-Una vez que tenemos cargado un dataframe (````radares``` en este caso), podemos aplicar varias funciones para explorarlo.
+Una vez que tenemos cargado un dataframe (```radares``` en este caso), podemos aplicar varias funciones para explorarlo.
 
 Podemos "imprimir" (deriva de la función ```print```) sus primeros o sus últimos registros
 ```{r}
@@ -355,7 +355,7 @@ La función ```table()``` devuelve una tabla de frecuencias absolutas con la can
 tabla <- table(radares$autopista_nombre)
 tabla
 ```
-Con ```prop.table```
+Con ```prop.table``` vemos la tabla de frecuencias relativa, la usamos con el objeto ```tabla``` creado más arriba
 ```{r}
 prop.table(tabla)
 ```
