@@ -1,0 +1,332 @@
+---
+title: "Introducción a la Ciencia de Datos en R - CPS"
+author: "Ramiro Oliverio Fernández, Hernán Escudero"
+date: "2019-09-27"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Data Wrangling
+
+Vamos a avanzar en aprender cómo manipular bases de datos con funciones del paquete ```tidyverse```.
+
+Para esto, primero instalamos y cargamos la librería.
+
+```{r}
+#install.packages("tidyverse")
+library(tidyverse)
+```
+Volvemos a cargar el dataset de *radares* como hicimos en la clase anterior. Pueden reemplazar esta línea con el set de datos que quieran trabajar!
+```{r}
+radares <- read.csv("http://cdn.buenosaires.gob.ar/datosabiertos/datasets/flujo-vehicular-por-radares-ausa/flujo-vehicular-por-radares-2019.csv", header=TRUE, sep=',', dec='.')
+```
+
+### dplyr
+
+Es uno de los componentes de todos los paquetes que integran tidyverse (no hace falta llamar a este paquete específicamente, ya lo hicimos cuando trajimos ```tidyverse```).
+
+#### select()
+
+Esta función nos permite seleccionar ciertas columnas del dataset con el que estamos trabajando. Es importante para bases con una alta dimensionalidad (ya que puede haber muchas columnas que no nos interesen o que las descartamos para que las operaciones sean más rápidas)
+
+Vemos primero las columnas del DF
+
+```{r}
+names(radares)
+```
+Hacemos la selección indicando las columnas con las que me quiero quedar
+```{r}
+radares_reducido <- select(radares, fecha, hora, cantidad)
+
+head(radares_reducido)
+```
+La selección puede ser indicando con el operador ```:``` para seleccionar las columnas en un rango de aparición.
+Hacemos la selección indicando las columnas con las que me quiero quedar
+```{r}
+radares_reducido <- select(radares, autopista_nombre:cantidad)
+
+head(radares_reducido)
+```
+La selección puede realizarse para excluir una variable
+```{r}
+radares_reducido <- select(radares, -disp_nombre)
+
+head(radares_reducido)
+```
+#### filter()
+
+Esta función nos permite filtrar los registros de nuestro dataset con una cierta condición. En la clase anterior, vimos una función similar que es ```subset()```. Por ejemplo, si queremos seleccionar las observaciones de la autopista Lugones
+```{r}
+radares_filtrado <- filter(radares, autopista_nombre=='AU 4  Lugones')
+
+head(radares_filtrado)
+```
+Podemos usar otros operadores lógicos (el "or", expresado con ```|```) para filtrar la base
+```{r}
+radares_filtrado <- filter(radares, autopista_nombre=='AU 4  Lugones' | autopista_nombre=='AU 5 Cantilo')
+
+head(radares_filtrado)
+```
+Incluimos un ejemplo con otros operadores lógicos. Comentadas están otras formas de hacer la misma operación, lo que cambia es su sintaxis.
+```{r}
+radares_filtrado <- filter(radares, autopista_nombre!='AU 4  Lugones' & cantidad>50)
+#radares_filtrado <- filter(radares, autopista_nombre!='AU 4  Lugones', cantidad>50)
+#radares_filtrado <- filter(radares, !(autopista_nombre=='AU 4  Lugones') & cantidad>50)
+
+head(radares_filtrado)
+```
+#### arrange()
+La función ```arrange()``` ordena nuestro dataframe por las columnas que les pasemos.
+```{r}
+radares_ordenado <- arrange(radares, cantidad)
+head(radares_ordenado)
+```
+Si se agregan más columnas, se van usando para ordenar el dataframe según su orden de aparición
+```{r}
+radares_ordenado <- arrange(radares, cantidad, autopista_nombre)
+head(radares_ordenado)
+```
+El orden predeterminado es ascendente (mayor a menor), sea cual sea el valor de la columna que indicamos que se ordene por. Para usar el caso contrario (descendente, de mayor a menor), debemos usar ```desc()```
+```{r}
+radares_ordenado <- arrange(radares, desc(cantidad))
+head(radares_ordenado)
+```
+#### mutate()
+Esta función nos permite generar columnas adicionales en el dataframe utilizando la información de las columnas ya existentes. Podemos usar los operadores aritméticos para crear variables con ````mutate()```. Aquí vamos a usar la función ```substring()``` con la cual extraemos una parte de un valor ```string```
+```{r}
+radares <- mutate(radares,
+                             anio = substr(fecha, 1, 4),
+                             mes = substr(fecha, 6, 7),
+                  dia = substr(fecha, 9, 10))
+                                
+head(radares)
+```
+#### summarise()
+
+Esta función se suele usar con ```group_by``` ya que genera un output con la función que se incluya dentro, con ```group_by``` obtendremos una para cada grupo. Vamos a verlo en ejemplos.
+
+```{r}
+#aquí solo vamos a ver la medida calculada
+summarise(radares, promedio = mean(cantidad))
+#acá agrupamos el dataframe por los valores únicos de 'autopista_nombre'                                
+agrupado <- group_by(radares, autopista_nombre)
+
+summarise(agrupado, promedio_autopista = mean(cantidad))
+```
+Se pueden agregar más columnas en el agrupamiento, por ejemplo
+```{r}
+agrupado <- group_by(radares, anio, mes)
+
+summarise(agrupado, promedio = median(cantidad))
+```
+Podemos usar muchas otras funciones dentro de ```summarise()```, como por ejemplo ```sum()``` (aplica una suma),```sd()``` (desvío estándar), ```IQR()``` (rango intercuartil), ```min()```, ```max()```, ```n()``` y ```n_distinct()```. Estos dos últimos son utilizados para contar y resultan bastante útiles.
+
+Recomendamos leer toda la [documentación de dplyr](https://www.rdocumentation.org/packages/dplyr/versions/0.7.8), o directamente la de [tidyverse](https://www.tidyverse.org/packages/) para poder explorar todas las funciones que hay en los mismos.
+
+#### Operador "pipe": ```%>%```
+
+El operador _pipe_ relaciona entidades, toma lo referenciado a la izquierda del operador y lo transforma con los comandos de la derecha. El principal beneficio de este operador es hacer el código mucho más simple y fácil de interpretar. También nos ahorra de crear muchos objetos que no vamos a volver a utilizar. Todas las funciones que vimos anteriormente se suelen utilizar en cadenadas con pipes, el cual se expresa con el operador ```%>%```. Por ejemplo, en el siguiente código llamamos al dataframe, filtramos por el mes "01", agrupamos por ```autopista_nombre```, usamos ````summarise()``` para hacer una suma de la variable ```cantidad``` (que se va a hacer sobre los grupos realizados en el ```group_by```), para luego ordenarlo de forma descendiente y mostrar las primeras 5 filas con ```head()``` 
+```{r}
+radares %>% 
+    filter(mes == '01') %>% 
+    group_by(autopista_nombre) %>% 
+    summarise(total = sum(cantidad)) %>% 
+    arrange(desc(total)) %>% 
+    head(5)
+```
+
+#### rename()
+
+Con esta función cambiamos el nombre de la columna. El primer parámetro es el nuevo nombre de la columna, y el segundo parámetro el nombre de la columna que queremos cambiar.
+
+```{r}
+radares %>%
+  rename(nombre_autopista = autopista_nombre) %>%
+  head(5)
+
+#vemos que en el output cambia el nombre de la columna, pero para guardarlo, lo tenemos que asignar al objeto que teníamos.
+
+radares <- radares %>%
+  rename(nombre_autopista = autopista_nombre)
+
+#chequeamos
+names(radares)
+```
+#### case_when()
+Esta función nos permite crear una variable definiendo una condición en base a los valores de las columnas preestablecidas. Sino se cumple la condición, la variable toma valor _NA_. Los parámetros que toma la función son las distintas condiciones. En este caso creamos una variable indicando el trimestre del registro, la variable que se crea puede tener una combinación usando otras variables (por ejemplo operadores aritméticos sobre la variable ```cantidad```)
+```{r}
+radares <- radares %>% 
+  mutate(variable_creada = case_when((mes == "01")|(mes == "02")|(mes == "03")   ~ '1er-trimestre',
+                                 (mes == "04")|(mes == "05")|(mes == "06")   ~ '2do-trimestre',
+                                 (mes == "07")|(mes == "08")|(mes == "09")   ~ '3er-trimestre',
+                                 (mes == "10")|(mes == "11")|(mes == "12")   ~ '4to-trimestre'))
+head(radares)
+```
+#### Joins
+
+Los joins son parte fundamental en el manejo de bases de datos. Consiste en cruzar diferentes tablas (o también hay joins "espaciales", tal vez lo veamos más adelante) mediante una variable que tengan en común (de cualquier tipo de valor), en general se aplican sobre las columnas de id. Como ya vimos para otras funciones, hay múltiples formas de generar joins. En los joins generalmente hay que pasar dos parámetros obligatorios: qué columna se va a usar para unir los dos dataframes y el tipo de join que se aplica, en el caso del paquete ```dplyr```, hay una función como el tipo de join que se utiliza, como se ve en la imagen: 
+
+
+![](img/joins-dplyr.png)
+Vamos a crear un dataframe ficticio con la longitud de las autopistas para joinearlo con nuestro dataset de ```radares``` con el que venimos trabajando. Luego lo vamos a joinear con radares, utilizando radares como dataframe "left".
+
+```{r}
+longitud_autopistas <- data.frame(nombre_autopista = c("AU 4  Lugones","AU 5 Cantilo","AU 9 de Julio Sur", "AU Dellepiane"),
+                            longitud_kilometros = c(52,36,65.8, 19))
+
+#con el punto indico que joinee por lo anterior
+#acá, cómo se hace el left_join llamando a ambos dataframes
+#left_join(radares, longitud_autopistas, by='nombre_autopista')
+
+#y acá haciendolo con pipe, el "." indica que llama a lo anterior
+radares <- radares %>% 
+  left_join(.,longitud_autopistas, by = "nombre_autopista")
+head(radares)
+```
+### tidyr
+
+Este paquete, parte también de ```tidyverse```, está pensado para poner en formato ```tidy``` (concepto que se ve en el paper que está en la clase anterior) a los datos. La ```tidy data``` se logra si:
+
+* Cada columna es una variable
+* Cada fila es una observación
+* Cada celda es un valor singular
+
+Recomendamos la lectura de las [guías de datos de GCBA](https://datosgcba.github.io/guia-datos/) donde hay una serie de formatos, estándares y recomendaciones como ejemplos de ```tidy data```.
+
+Cheatsheet de ```tidyr```, algunos paquetes tienen cheatsheets de este estilo (que resumen las funcionalidades del paquete):
+![](img/data-import-cheatsheet-thumbs.png)
+
+Vamos a ver dos funciones: ````spread()``` y ```gather()```
+
+![](img/gather-spread.png)
+
+
+Armamos una nueva tabla para mostrar las funciones:
+```{r}
+cantidad_autopista_mes <- radares %>% 
+    group_by(nombre_autopista, mes) %>% 
+    summarise(total = sum(cantidad))
+```
+
+#### Spread
+```{r}
+datos_spread <- cantidad_autopista_mes %>% 
+  spread(.,       
+  key = nombre_autopista,    #variable cuyos valores van a pasar a ser los nombres de columnas
+  value = total) #los valores con los que se llenan las celdas, los que van a ser "esparcidos"
+
+datos_spread  
+```
+
+#### Gather
+
+```gather()``` es la función opuesta, nos permite revertir el resultado (o la podemos aplicar directamente, depende de cómo estén estructurandos nuestros datos)
+```{r}
+datos_gather <- datos_spread %>%  
+  gather(.,       
+   key   = nombre_autopista,   #variable que toma los nombres de las columnas 
+   value = total,  #variable que toma los valores de las columnas
+   2:5)             #le indico que columnas juntar 
+
+datos_gather
+```
+
+### bind_rows, cbind() y rbind()
+
+Esta función de ```dplyr``` permite apilar dos dataframes en uno solo. Es similar a ```rbind()``` (función muy conocida, que tiene su versión para concatenar columnas llamada ```cbind()```), pero la diferencia radica en que ```bind_rows()``` permite combinar dos dataframes con diferente número de columnas, mientras que ```rbind``` tira error en ese caso. ``bind_rows()```` asigna _NA_ a las filas de un dataframe donde el valor no es provisto por una columna de mismo nombre de otro dataframe.
+```{r}
+radares2 <- radares %>%  
+  filter(cantidad > 100)
+
+nrow(radares)
+nrow(radares2)
+
+
+union <- bind_rows(radares, radares2)
+nrow(union)
+nrow(radares)+nrow(radares2)
+
+#veamos un ejemplo de qué pasa sino tienen las mismas columnas:
+a <- data.frame(a = 1:2, b = 3:4, c = 5:6)
+b <- data.frame(a = 7:8, b = 2:3, c = 3:4, d = 8:9)
+#ejecutando esto, rbind tira error
+#rbind(a, b)
+#bind_rows concatena los dataframes, sin valores de "d" para el objeto "a"
+bind_rows(a, b)
+
+```
+Ejemplo de ````cbind()```. Ejemplo extraido de http://www.datasciencemadesimple.com/cbind-in-r/, recomendamos webs como estas (por ejemplo r-bloggers, rstatisticsblog, las van a ir conociendo a medida que googleen diferentes funciones!)
+```{r}
+#Creamos dos dataframes 
+df1 = data.frame(name = c("Rahul","joe","Adam","Brendon"), married_year = c(2016,2015,2016,2008))
+df2 = data.frame(Birth_place = c("Delhi","Seattle","London","Moscow"), Birth_year = c(1988,1990,1989,1984))
+
+cbinded_df<-cbind(df1,df2)
+cbinded_df
+```
+
+### list_files
+
+Esta función sirve para listar los archivos de la carpeta que pasemos como ````path```, se suele combinar con ```getwd()``` y ```setwd()```, que vimos la clase pasada. Es útil cuando estamos seteando directorios de trabajo o chequeando de donde podemos levantar o guardar la información. Su versión "analógica" sería explorar en la pestaña _Files_ del environment (a la derecha).
+
+```{r}
+list.files("C:/Users/rama_/Documents/GitHub/cursocps/clase2/")
+```
+
+### Valores faltantes
+
+Tener en cuenta los valores faltantes constantemente es una buena práctica al trabajar con datos en general. La mayoría de las operaciones lógicas que incluyen ```NA``` (not available) llevan a indefiniciones. Muchas funciones incluyen tratamiento de nulos, por ejemplo la que vimos en la clase anterior al aplicar ```mean()```, con el parámetro ```na.rm```. Hay que tener en cuenta cómo tratan las diferentes funciones a los ```NA```. Por ejemplo, ```filter()``` las ignora y ```arrange()``` las incluye pero al final. Para consultar si el valor es ```NA```, utilizamos la función ```is.na()```. 
+
+```{r}
+#ejemplo de tratamiento de NA en la función mean()
+mean(radares$cantidad, na.rm = TRUE)
+#sumamos la cantidad de na de una columna
+sum(is.na(radares$seccion_sentido))
+#contar na para cada columna del dataframe
+na_count <-sapply(radares, function(y) sum(length(which(is.na(y)))))
+na_count
+#lo podemos pasar a dataframe
+na_count <- data.frame(na_count)
+na_count
+```
+En el medio se metió la función ```sapply()```, vamos a ver esta familia de funciones más adelante. Si quieren ir anticipándose, pueden chequear [este link](http://www.diegocalvo.es/funciones-apply-lapply-sapply-tapply-mapply-vapply-en-r/)
+
+
+### Lubridate
+
+Este paquete es ideal para trabajar con datos de formato ```date``` o ```datetime```.
+
+```{r}
+#install.packages("lubridate")
+library(lubridate)
+#imputamos un string con la fecha y con la función dmy_hms() la pasamos al objeto de fecha POSIX
+fecha  <- "27/09/19 10:00:00"
+fecha  <- dmy_hms(fecha)
+class(fecha)
+fecha
+#Con la función Sys.time() obtengo el tiempo que me tire mi sistema 
+fecha_hora_actual <- Sys.time()
+fecha_hora_actual
+#Ahora podemos extraer información del objeto datetime
+year(fecha)
+month(fecha)
+day(fecha)
+wday(fecha, label = TRUE)
+hour(fecha)
+#U operaciones
+fecha + days(1)
+fecha + hours(10)
+month(fecha) <- month(fecha) + 1
+```
+### Algunos ejercicios
+
+* Seleccionar una base (pueden ser de BA Data, por ejemplo [SUACI](https://data.buenosaires.gob.ar/dataset/sistema-unico-atencion-ciudadana) o [RUS](https://data.buenosaires.gob.ar/dataset/relevamiento-usos-suelo)
+* Aplicar las operaciones que vimos de tidyverse
+* Manipular alguna fecha
+* Probar joins / binds
