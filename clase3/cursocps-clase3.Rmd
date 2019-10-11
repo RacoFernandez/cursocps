@@ -14,6 +14,19 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Visualizaciones
 
+### Importancia de graficar
+
+Realizar y analizar gráficamente nuestro conjunto de datos es una parte importante del análisis exploratorio de datos y claramente también del reporte y comunicación de resultados.
+
+Un ejemplo muy concreto de la importancia de graficar para el análisis exploratorio de datos es el [Cuarteto de Anscombe](https://es.wikipedia.org/wiki/Cuarteto_de_Anscombe).
+
+Lo que muestra el Cuarteto de Anscombe es que para cuatro conjuntos de datos (con 2 distribuciones cada una), que aunque tengan los mismos estadísticos (media, varianza, correlación y recta de regresión) al graficarlos vemos que los conjuntos de datos son completamente diferentes.
+
+![](img/conjunto-anscombe.png)
+
+![](img/Anscombe.svg)
+
+
 ### Ggplot2
 
 Vamos a empezar a trabajar con visualizaciones y maneras de graficar en R. Uno de los paquetes de visualizaciones más extendidos en el lenguaje es ```ggplot2```. Efectivamente, adivinaron, es parte de ```tidyverse```. Este lenguaje tiene una sintaxis propia. El mismo funciona con capas, que vamos a ir viendo. Basicamente:
@@ -50,7 +63,7 @@ options(scipen=999)  # apagamos la notación científica
 data("midwest", package = "ggplot2")  # cargamos los datos
 # midwest <- read.csv("http://goo.gl/G1K41K") # Otra forma de cargar los datos
 # Iniciamos Ggplot, sólo va a tener los ejes (columnas del dataframe)
-kable(head(midwest))
+knitr::kable(head(midwest))
 ggplot(midwest, aes(x=area, y=poptotal))
 ```
 
@@ -255,10 +268,11 @@ Con esta librería, que es una extensión de ggplot2, podemos darle animación a
 #install.packages("gganimate")
 library(gganimate)
 library(data.table)
+library(tidyverse)
 sube <- fread("C:/Users/rama_/Desktop/Ramiro/hackaton/hackaton_sube/ext_dataton_v1.csv")
 
 #ver código original: http://rpubs.com/martinalalu/movilidad-urbana
-
+#grepl() es una función del paquete grep que viene de base en R, que es para pattern matching, que trae true si matchea el patrón.
 sube <- sube %>% 
   mutate(DIA=case_when(grepl(1,DIA_SEMANA)~"LUNES",
                       grepl(2,DIA_SEMANA)~"MARTES",
@@ -328,7 +342,12 @@ ggplot(iris, aes(x = Sepal.Length, y = Species, fill=Species)) +
 Otra extensión muy buena de ggplot2 que nos permite graficar de manera muy descriptiva distribuciones es ```ggridges()```. Chequeen su [documentación](https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html)
 
 Para ayudarnos a armar código de ggplot podemos usar [esquisse](https://dreamrs.github.io/esquisse/).
+```{r}
 
+#install.packages("esquisse")
+#library(esquisse)
+#esquisse::esquisser()
+```
 ### Ggvis
 Otro paquete muy bueno de visualizaciones es ggvis(). Vean la documentación [acá](https://www.rdocumentation.org/packages/ggvis/versions/0.4.4). Tiene otra sintaxis aunque es similar a la de ggplot2, ya que toma elementos de ésta, y los combina con ```shiny```
 
@@ -350,3 +369,6 @@ pairs(iris)
 #boxplot
 boxplot(iris$Sepal.Length ~ iris$Species, notch = T)
 ```
+### R Ciencia de Datos (libro traducido al español)
+
+[Aquí](https://es.r4ds.hadley.nz/)
