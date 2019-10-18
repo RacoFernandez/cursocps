@@ -1,7 +1,7 @@
 ---
 title: "Introducción a la Ciencia de Datos en R - CPS"
 author: "Ramiro Oliverio Fernández, Hernán Escudero"
-date: "2019-10-04"
+date: "2019-10-11"
 output:
   html_document:
     toc: yes
