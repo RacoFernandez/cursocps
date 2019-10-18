@@ -404,3 +404,10 @@ iris %>%
 ## Mapas!
 
 Con lo que ya fueron aprendiendo en estas clases, pueden empezar a indagar en el mundo de SIG (Sistemas de Información Geográfica, GIS por sus siglas en inglés), el cual escapaba un poco a los alcances del curso. Muchas librerías en R nos permiten trabajar tanto con datos geográficos como generar mapas con las mismas (leaflet, sf, ggplot2, entre otras). Pueden encontrar una buena introducción en uno de los cursos en los que se basan estas clases, [aquí](https://bitsandbricks.github.io/ciencia_de_datos_gente_sociable/informacion-geografica-y-mapas.html).
+
+## Repositorios
+
+https://paulvanderlaken.com/2017/08/10/r-resources-cheatsheets-tutorials-books/amp/?__twitter_impression=true
+
+https://github.com/data-datum/learning_R
+
