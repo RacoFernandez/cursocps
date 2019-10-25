@@ -1,0 +1,103 @@
+---
+title: "Introducción a la Ciencia de Datos en R - CPS"
+author: "Ramiro Oliverio Fernández, Hernán Escudero"
+date: "2019-10-18"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+---
+Con este parámetro podemos setear condiciones generales/globales para todo el documento. Los bloques de código van entre los operadores "```" y entre las llaves podemos setear las opciones que deseamos para ese bloque de código. Todo lo que quede por fuera, será mostrado en texto, el cual puede tener el formato que le especifiquemos también.
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+Para hacer correr el markdown y generar el output deseado (en este caso un documento html) podemos usar el comando de RStudio ```knit```. También se puede usar la función ```render()```. Los bloque de código son denominados chunks. Para generar un chunk de r, tenemos que pasar el operador mencionado para abrir y cerrar el chunk y dentro de las llaves ```{}``` y agregar ```r``` para indicar que es código r (podemos usar ```bash```, ```SQL```, ```python```, entre otros también.  Podemos setear también, dentro de las llaves, las siguientes opciones para cada chunk:
+
+* include = FALSE evita que el código y los resultados aparezcan, pero R Markdown igual corre el código del chunk, y sus resultados pueden ser retomados en otros chunks.
+* echo = FALSE evita que el código aparezca pero los resultados van a aparecer.
+* message = FALSE evita que aparezcan mensajes generados por el código.
+* warning = FALSE evita que los warnings generados por el código aparezcan en el documento final.
+* fig.cap = "..." agrega una leyenda a los resultados gráficos.
+
+Por ejemplo,
+```{r, include=TRUE}
+summary(iris)
+```
+
+```{r, include=FALSE}
+summary(iris)
+```
+
+```{r, echo=FALSE}
+summary(iris)
+```
+
+```{r, message=FALSE}
+library(tidyverse)
+```
+
+Para mostrar tablas de forma más prolija podemos usar la función ```kable()``` del paquete ```knitr```.
+```{r echo=FALSE, results='asis'}
+library(knitr)
+kable(head(iris), caption='El clásico iris')
+```
+
+Para el texto podemos usar diferentes opciones de formato.
+
+-  *itálica*
+-  **negrita**
+-  `código`
+-  [link](https://github.com/RacoFernandez/cursocps)
+
+Podemos poner headers, que por las opciones que seteamos al principio de todo (```toc``` y ```toc_float```):
+
+# Cabezal 1
+
+## Cabezal 2
+
+### Cabezal 3
+
+Hay muchísimas opciones más de formateo: ecuaciones latex, tablas, bibliografía.
+
+También hay muchos formatos de output: html notebook, html document, pdf, word, odt, md (markdown), entre otros. También puede tener un output en formatos de presentación, dashboard, sitios web, libros, entre otros. Lo que vimos en esta presentación y más lo encuentran en la [documentación](https://rmarkdown.rstudio.com/index.html), que incluye ejemplos para usar de referencia. Pueden chequear la [cheatsheet](https://rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf) también!
+
+Podemos usar opciones de estilo de ```html/css``` para formatear nuestro texto también:
+
+Las rosas son <span style="color:red">rojas</span>, 
+las violetas son <span style="color:blue">azules</span>
+
+Rmarkdown permite muchas combinaciones. Por ejemplo, podemos usar el código en la misma línea, por ejemplo para decir que el dataset iris tiene `r nrow(iris)` filas.
+
+## RData, RDS
+
+Aprovechemos para ver como manejar los formatos RData y RDS. Los RDS permiten guardar un objeto que ya tenemos cargado en nuestro ambiente en este formato, y poder recuperarlo en otra sesion de R.
+
+```{r}
+x <- 1:5
+saveRDS(x, file="x.Rds")
+rm(x)
+
+## Leer archivo usando readRDS(), hay que asignar el nombre al objeto, no retoma el que ya tenia.
+new_x1 <- readRDS("x.Rds")
+new_x1
+```
+
+Con Rdata podemos guardar todo el ambiente o varios objetos a la vez.
+
+```{r}
+x <- 1:5
+y <- 6:10
+# guardamos
+save(x, y, file = "data.RData")
+rm(x)
+rm(y)
+# cargamos
+load("data.RData")
+
+# También podemos cargar todo el ambiente
+#guardamos
+save.image(file = "my_work_space.RData")
+#restoreamos
+load("my_work_space.RData")
+```

@@ -409,5 +409,4 @@ Con lo que ya fueron aprendiendo en estas clases, pueden empezar a indagar en el
 
 https://paulvanderlaken.com/2017/08/10/r-resources-cheatsheets-tutorials-books/amp/?__twitter_impression=true
 
-https://github.com/data-datum/learning_R
-
+https://github.com/data-datum/learning
